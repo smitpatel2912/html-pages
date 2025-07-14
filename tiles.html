@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+	<script>
+			function setpicimage(l,w){
+				document.getElementById("xlength").innerText = l + ' Ft';
+				document.getElementById("ylength").innerText = w + ' Ft';
+			}
+			
+			function calculate()
+			{
+				var SLength=document.getElementById("SLength").value;
+				var SWidth=document.getElementById("SWidth").value;
+				
+				setpicimage(SLength,SWidth);
+				document.getElementById("ar_feet").value = parseFloat(SLength)*parseFloat(SWidth);
+				document.getElementById("ar_mtr").value = parseFloat((parseFloat(SLength)*parseFloat(SWidth))/(3.28*3.28),3);
+				
+				var tileSize = document.getElementById("sizes").value;
+				
+				var tilesinbox;
+				//tilesinbox=0;
+			
+				tilesinbox = document.getElementById("sizes").options[document.getElementById("sizes").selectedIndex].dataset.picperbox;
+				//alert(tilesinbox);exit;
+				if (tileSize.indexOf("mm")>0) tileSize = tileSize.substr(0,tileSize.indexOf("mm"));
+				tileCoords=tileSize.split("x");
+				sLength=SLength*304.8;
+				sWidth=SWidth*304.8;
+				var doorSize, winSize;
+			
+				var TileArea = (parseFloat(sLength)*parseFloat(sWidth));
+			
+				xVal=tileCoords[0];
+				yVal=tileCoords[1];
+			
+				var tileSize = (parseFloat(xVal) * parseFloat(yVal));
+				var TotalTilesRequired = TileArea/tileSize;
+				if ((TotalTilesRequired-Math.round(TotalTilesRequired))>0) 
+					TotalTilesRequired=Math.round(TotalTilesRequired)+1;
+				else
+					TotalTilesRequired=Math.round(TotalTilesRequired,0);
+				document.getElementById("TotalTiles").value = TotalTilesRequired;
+				
+				
+				var boxcount = parseFloat(TotalTilesRequired/ tilesinbox );
+				
+				if ((boxcount-Math.round(boxcount))>0) 
+					boxcount=Math.round(boxcount)+1;
+				else
+					boxcount=Math.round(boxcount,0);
+				document.getElementById("TotalBoxes").value = boxcount;
+			}
+		</script>
+    <style>
+        .theme-main-title {
+            padding-left: 0;
+        }
+
+        .tilestips {
+            background: none repeat scroll 0 0;
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            display: inline-block;
+            height: 220px;
+            overflow: hidden;
+            position: relative;
+            vertical-align: middle;
+            width: 100%;
+        }
+
+        .tilestips div {
+            background: #fff url('./includes/images/tilePattern.png') repeat scroll -4px -4px;
+            border: 1px solid #000000;
+            box-shadow: 0 0 8px 5px #fff;
+            left: 52%;
+            position: absolute;
+            top: 52%;
+            transform: translateX(-50%) translateY(-50%);
+        }
+
+        .tilestips .tileFt {
+            background: #868686 none repeat scroll 0 0;
+            margin-bottom: 0;
+            padding: 0;
+            position: absolute;
+            text-align: center;
+        }
+
+        .tilestips .tileFt span {
+            background: #fff none repeat scroll 0 0;
+            color: gray;
+            display: block;
+            font-size: 12px;
+            font-weight: bold;
+            height: 20px;
+            position: absolute;
+            text-transform: uppercase;
+            width: 50px;
+        }
+
+        .tilestips .horzFt span {
+            margin-left: 50%;
+            margin-top: -12px;
+            transform: translateX(-50%);
+        }
+
+        .tilestips .vertFt span {
+            margin-left: -27px;
+            top: 50%;
+            transform: rotate(-90deg) translateX(20%);
+        }
+
+        .horzFt {
+            border-top: 1px dashed #868686;
+            height: 0;
+            left: 0;
+            top: -20px;
+            width: 100%;
+        }
+
+        .vertFt {
+            border-left: 1px dashed #868686;
+            height: 100%;
+            left: -20px;
+            top: 0;
+            width: 0;
+        }
+		.bg-image {
+			height: 100% !important;
+		}	
+    </style>
+</head>
+
+<body>
+    <div class="sec-title text-center" data-aos="fade-up" data-aos-delay="100">
+        <h2>Let's Calculate Your Area</h2>
+    </div>
+    <div class="row">
+        <div class="col-lg-7">
+            <div class="contact-form tiles-calc">
+                <div class="wpcf7">
+                    <form class="wpcf7-form init">
+                        <div class="row">
+                            <div class="form-group col-md-12" data-aos="fade-up" data-aos-delay="100">
+                                <h4>Calculation Your Area</h4>
+                            </div>
+                            <div class="form-group col-md-12" data-aos="fade-up" data-aos-delay="200">
+                                <span class="wpcf7-form-control-wrap your-name">
+                                    <label>Length:</label>
+                                    <input type="text" class="wpcf7-form-control wpcf7-text" id="SLength" name="SLength"
+                                        placeholder="Enter Length in Feet" />
+                                </span>
+                            </div>
+                            <div class="form-group col-md-12" data-aos="fade-up" data-aos-delay="300">
+                                <span class="wpcf7-form-control-wrap your-email">
+                                    <label>Width:</label>
+                                    <input type="text" class="wpcf7-form-control wpcf7-text" id="SWidth" name="SWidth"
+                                        placeholder="Enter Width in Feet" />
+                                </span>
+                            </div>
+                            <div class="form-group col-md-12" data-aos="fade-up" data-aos-delay="400">
+                                <span class="wpcf7-form-control-wrap your-email">
+                                    <label>Tiles Size:</label>
+                                    <select id="sizes" name="sizes" class="wpcf7-form-control wpcf7-select">
+                                        <option>Select Size</option>
+                                        <option value="300x1200" data-picperbox="3">300 x 1200 mm</option>
+                                        <option value="200x1200" data-picperbox="3">200 x 1200 mm</option>
+                                        <option value="600x600" data-picperbox="4">600 x 600 mm</option>
+                                        <option value="600x900" data-picperbox="4">600 x 900 mm</option>
+                                        <option value="600x1200" data-picperbox="2">600 x 1200 mm</option>
+                                    </select>
+                                </span>
+                            </div>
+                            <div class="form-group col-md-12" data-aos="fade-up" data-aos-delay="500">
+                                <button type="button" class="theme-btn style-one wpcf7-form-control wpcf7-submit"
+                                    name="Button1" id="Button1" onclick="calculate()"><span>Calculate</span></button>
+                            </div>
+
+                            <div class="form-group col-md-12" style="padding: 20px 0px;">
+                                <div style="border: 1px solid #eeeeee;"></div>
+                            </div>
+
+                            <div class="form-group col-md-12" data-aos="fade-up" data-aos-delay="100">
+                                <h4>Result of Calculation</h4>
+                            </div>
+                            <div class="form-group col-md-12" data-aos="fade-up" data-aos-delay="200">
+                                <span class="wpcf7-form-control-wrap your-name">
+                                    <label>Sq.M:</label>
+                                    <input class="wpcf7-form-control wpcf7-text" type="text" name="ar_mtr" id="ar_mtr"
+                                        placeholder="Sq.M" disabled="" />
+                                </span>
+                            </div>
+                            <div class="form-group col-md-12" data-aos="fade-up" data-aos-delay="300">
+                                <span class="wpcf7-form-control-wrap your-email">
+                                    <label>Sq.Ft:</label>
+                                    <input class="wpcf7-form-control wpcf7-text" type="text" name="ar_feet" id="ar_feet"
+                                        placeholder="Sq.Ft" disabled="" />
+                                </span>
+                            </div>
+                            <div class="form-group col-md-12" data-aos="fade-up" data-aos-delay="400">
+                                <span class="wpcf7-form-control-wrap your-name">
+                                    <label>Total Tiles:</label>
+                                    <input class="wpcf7-form-control wpcf7-text" type="text" name="TotalTiles"
+                                        id="TotalTiles" placeholder="Required Tiles" disabled="" />
+                                </span>
+                            </div>
+                            <div class="form-group col-md-12" data-aos="fade-up" data-aos-delay="500">
+                                <span class="wpcf7-form-control-wrap your-email">
+                                    <label>Total Boxes:</label>
+                                    <input class="wpcf7-form-control wpcf7-text" type="text" name="TotalBoxes"
+                                        id="TotalBoxes" placeholder="Total Boxes" disabled="" />
+                                </span>
+                            </div>
+                            <div class="form-group col-md-12" data-aos="fade-up" data-aos-delay="600">
+                                <p>This is Only Approx Calculation</p>
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="contact-form tiles-calc">
+                <div class="tilestips" data-aos="fade-up" data-aos-delay="100">
+                    <div style="height: 58.2%; width: 79.4%;">
+                        <p class="tileFt horzFt"><span id="xlength">3 Ft</span></p>
+                        <p class="tileFt vertFt"><span id="ylength">3 Ft</span></p>
+                    </div>
+                </div>
+                <div style="padding-top: 30px;">
+                    <h4 style="padding-bottom: 10px;" data-aos="fade-up" data-aos-delay="200">TIPS</h4>
+                    <ul>
+                        <li data-aos="fade-up" data-aos-delay="300">Length and Width Dimensions are in feet.</li>
+                        <li data-aos="fade-up" data-aos-delay="400">- 1 Feet = 0.3048 Meter</li>
+                        <li data-aos="fade-up" data-aos-delay="500">- 1 Meter = 3.28084 Feet</li>
+                        <li data-aos="fade-up" data-aos-delay="600">- 1 Meter = 100 Centimeters</li>
+                        <li data-aos="fade-up" data-aos-delay="700">- 1 Centimeters = 0.01 Meter</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+</body>
+
+</html>

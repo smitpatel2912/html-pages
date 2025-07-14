@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+    <style>
+        .tiles-body {
+            background-color: #F6F6F6;
+            color: black;
+            display: flex;
+            align-items: center;
+            /* justify-content: space-evenly */
+            justify-content: center;
+        }
+    </style>
+
+</head>
+
+<body class="tiles-body">
+    <div id="homepage-1">
+        <div class="ps-page--product">
+            <div class="container-fluid">
+                <div class="ps-product--detail ps-product--fullwidth">
+                    <div class="ps-product__info">
+                        <div class="card-body">
+                            <div class="company-inquiry-card">
+
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <form name="cFrm" id="cFrm">
+                                        <div class="ps-container">
+                                            <div class="row">
+                                                <div class="col-lg-4 col-lg-4 col-sm-12 col-12">
+                                                    <div class="form-group">
+                                                        <label>Length (Feet)</label>
+                                                        <input class="form-control rounded-0 mt-3" name="SLength"
+                                                            id="SLength" min="1" type="number"
+                                                            placeholder="Enter Length In Feet * "
+                                                            onselectstart="return false" onpaste="return false;"
+                                                            onCopy="return false" onCut="return false"
+                                                            onDrag="return false" onDrop="return false">
+                                                        <p id="demo1"></p>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4 col-md-4 col-sm-12 col-12">
+                                                    <div class="form-group">
+                                                        <label>Width (Feet)</label>
+                                                        <input class="form-control rounded-0 mt-3" name="SWidth"
+                                                            id="SWidth" min="1" type="number"
+                                                            placeholder="Enter Width In Feet *"
+                                                            onselectstart="return false" onpaste="return false;"
+                                                            onCopy="return false" onCut="return false"
+                                                            onDrag="return false" onDrop="return false">
+                                                        <p id="demo2"></p>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4 col-md-4 col-sm-12 col-12">
+                                                    <div class="form-group">
+                                                        <label for="sizes">Size</label>
+                                                        <select class="form-control sizes rounded-0 mt-3" name="sizes"
+                                                            id="sizes">
+                                                            <option value="">Select Any One</option>
+                                                            <option value="600 x 600" data-picperbox="4">600 x 600 mm
+                                                            </option>
+                                                            <option value="600 x 1200" data-picperbox="2">600 x 1200 mm
+                                                            </option>
+                                                            <option value="800 x 800" data-picperbox="2">800 x 800 mm
+                                                            </option>
+                                                            <option value="800 x 1600" data-picperbox="2">800 x 1600 mm
+                                                            </option>
+                                                            <option value="1200 x 1800" data-picperbox="2">1200 x 1800
+                                                                mm
+                                                            </option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-12 col-md-12 col-sm-12 col-12">
+                                                    <input type="submit"
+                                                        style="background-color: #CE184B; color: white;"
+                                                        class="btn rounded-0 primary resq-cata mt-2 mb-3 py-2 p-4"
+                                                        name="submit" value="CALCULATE" onselectstart="return false"
+                                                        onpaste="return false;" onCopy="return false"
+                                                        onCut="return false" onDrag="return false"
+                                                        onDrop="return false">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ps-product--detail ps-product--fullwidth" id="show">
+                    <div class="ps-product__info">
+                        <div class="card-body">
+                            <div class="company-inquiry-card">
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="ps-container">
+                                        <div class="row">
+                                            <div class="col-lg-6 col-lg-6 col-sm-12 col-12">
+                                                <div class="form-group mt-2">
+                                                    <label>Total Sq. Meter</label>
+                                                    <input class="form-control rounded-0 mt-3" maxlength="10"
+                                                        name="ar_mtr" id="ar_mtr" readonly size="6"
+                                                        onselectstart="return false" onpaste="return false;"
+                                                        onCopy="return false" onCut="return false" onDrag="return false"
+                                                        onDrop="return false">
+
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6 col-md-6 col-sm-12 col-12">
+                                                <div class="form-group mt-2">
+                                                    <label>Total Sq. Feet</label>
+                                                    <input class="form-control rounded-0 mt-3" id="ar_feet"
+                                                        maxlength="10" name="ar_feet" readonly size="6"
+                                                        onselectstart="return false" onpaste="return false;"
+                                                        onCopy="return false" onCut="return false" onDrag="return false"
+                                                        onDrop="return false">
+
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6 col-md-6 col-sm-12 col-12">
+                                                <div class="form-group mt-2">
+                                                    <label>Required Tiles</label>
+                                                    <input class="form-control rounded-0 mt-3" maxlength="10"
+                                                        name="TotalTiles" id="TotalTiles" readonly size="10"
+                                                        onselectstart="return false" onpaste="return false;"
+                                                        onCopy="return false" onCut="return false" onDrag="return false"
+                                                        onDrop="return false">
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6 col-md-6 col-sm-12 col-12">
+                                                <div class="form-group mt-2">
+                                                    <label>Required Boxes</label>
+                                                    <input class="form-control rounded-0 mt-3" id="TotalBoxes"
+                                                        maxlength="10" name="TotalBoxes" readonly size="10"
+                                                        onselectstart="return false" onpaste="return false;"
+                                                        onCopy="return false" onCut="return false" onDrag="return false"
+                                                        onDrop="return false">
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+        integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>$(document).on('submit', 'form', function (e) {
+            e.preventDefault();
+            calculate();
+        })
+
+        function calculate() {
+
+            var SLength = document.getElementById("SLength").value;
+            var SWidth = document.getElementById("SWidth").value;
+
+            var custom_jp_feet = parseFloat(SLength) * parseFloat(SWidth);
+            var custom_jp_mtr = parseFloat((parseFloat(SLength) * parseFloat(SWidth)) / (3.28 * 3.28), 3);
+
+            document.getElementById("ar_feet").value = custom_jp_feet.toFixed(2);
+            document.getElementById("ar_mtr").value = custom_jp_mtr.toFixed(2);
+            var tileSize = document.getElementById("sizes").value;
+            var tilesinbox;
+
+            tilesinbox = document.getElementById("sizes").options[document.getElementById("sizes").selectedIndex].dataset.picperbox;
+
+            if (tileSize.indexOf("mm") > 0) tileSize = tileSize.substr(0, tileSize.indexOf("mm"));
+            tileCoords = tileSize.split("x");
+            sLength = SLength * 304.8;
+            sWidth = SWidth * 304.8;
+
+            var TileArea = (parseFloat(sLength) * parseFloat(sWidth));
+
+            xVal = tileCoords[0];
+            yVal = tileCoords[1];
+
+            var tileSize = (parseFloat(xVal) * parseFloat(yVal));
+            var TotalTilesRequired = TileArea / tileSize;
+            if ((TotalTilesRequired - Math.round(TotalTilesRequired)) > 0)
+                TotalTilesRequired = Math.round(TotalTilesRequired) + 1;
+            else
+                TotalTilesRequired = Math.round(TotalTilesRequired, 0);
+            document.getElementById("TotalTiles").value = TotalTilesRequired;
+
+
+            var boxcount = parseFloat(TotalTilesRequired / tilesinbox);
+
+            if ((boxcount - Math.round(boxcount)) > 0)
+                boxcount = Math.round(boxcount) + 1;
+            else
+                boxcount = Math.round(boxcount, 0);
+            document.getElementById("TotalBoxes").value = boxcount;
+            calculates();
+        }
+
+        function calculates() {
+            var area = document.getElementById("area").value;
+            var totalArea = document.getElementById("totalArea").value;
+            var sizes = document.getElementById("sizess").value;
+
+            var tilesinbox = document.getElementById("sizes").options[document.getElementById("sizes").selectedIndex].dataset.picperbox;
+
+            if (area == 'sqft') {
+                var t_feet = totalArea;
+                var ar_mtr = t_feet * 0.092903; /*  sq ft  to sq mt convert 1 sq ft = 0.092903 sq mt */
+            } else if (area == 'sqmt') {
+                var ar_mtr = totalArea;
+                var t_feet = ar_mtr * 10.7639; /*  sq mt  to sq ft convert 1 sq mt = 10.7639 sq ft */
+
+            }
+
+            if (sizes.indexOf("mm") > 0) sizes = sizes.substr(0, tileSize.indexOf("mm"));
+            tileCoords = sizes.split("x");
+
+            xVal = tileCoords[0];
+            yVal = tileCoords[1];
+
+            var onetilearea = (xVal / 1000) * (yVal / 1000)
+
+            var tot_tile = Math.round((ar_mtr / onetilearea), 0); // 0.36 is 1 tile coverd area for 600 x 600 mm
+            var tot_box = Math.round((tot_tile / tilesinbox), 0); //where 4 is total pic. in one box
+            document.getElementById("ar_mtr").value = ar_mtr;
+            document.getElementById("ar_feet").value = t_feet;
+            document.getElementById("TotalTiles").value = tot_tile;
+            document.getElementById("TotalBoxes").value = tot_box;
+        }</script>
+
+</body>
+
+</html>
