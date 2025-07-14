@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Tile Calculator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+    <style>
+        @media screen {
+            .pdf-only {
+                display: none;
+            }
+        }
+
+        @media print {
+            .hide-on-pdf {
+                display: none !important;
+            }
+
+            .pdf-only {
+                display: block;
+            }
+        }
+
+        .btn-calculate {
+            background-color: #484445 !important;
+            color: white !important;
+            padding: 10px 20px !important;
+            min-height: 44px !important;
+            width: 160px !important;
+            border: none !important;
+            font-size: 16px !important;
+            text-align: center !important;
+        }
+
+        .btn-reset {
+            background-color: #D3D2D2 !important;
+            padding: 10px 20px !important;
+            min-height: 44px !important;
+            width: 160px !important;
+            border: none !important;
+            font-size: 16px !important;
+            text-align: center !important;
+        }
+
+        .btn-print-estimate {
+            background-color: #3E3E3E !important;
+            color: white !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            gap: 8px !important;
+            width: 254px !important;
+            height: 54px !important;
+            font-size: 14px !important;
+            font-weight: 500 !important;
+            border: none !important;
+            padding: 10px 20px !important;
+            text-align: center !important;
+            text-decoration: none !important;
+        }
+
+        .btn-icon {
+            width: 20px !important;
+            height: 20px !important;
+        }
+
+        @media (min-width: 640px) {
+            .btn-print-estimate {
+                width: 280px !important;
+            }
+        }
+    </style>
+</head>
+
+<body class="hide-on-pdf bg-[#F4F4F4] max-w-[1920px] mx-auto ">
+
+    <div class="flex flex-col items-center justify-center p-4 md:p-8">
+
+        <!-- Main Content Flex -->
+        <div class="flex flex-col lg:flex-row gap-[30px] w-full max-w-[1477px] text-[18px]">
+
+            <!-- Left: Tile Grid -->
+            <div class="flex flex-col items-center bg-white gap-[10px] p-6 sm:p-[60px] w-full lg:max-w-[569px] h-auto">
+                <div class="flex flex-col sm:flex-row gap-4 items-center w-full justify-center">
+                    <!-- Image + Horizontal Label -->
+                    <div class="flex flex-col items-center relative">
+                        <!-- Vertical Line & Width Label -->
+                        <div
+                            class="absolute -left-[26px] sm:-left-[45px] top-0 h-[150px] sm:h-[208px] w-[20px] sm:w-[30px] flex items-center justify-center">
+                            <div class="absolute top-0 left-1/2 transform -translate-x-1/2 h-full w-[1px] bg-black">
+                            </div>
+                            <div id="widthValue"
+                                class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rotate-[-90deg] bg-white px-[6px] text-black z-10 whitespace-nowrap antialiased">
+                                Width
+                            </div>
+
+                        </div>
+
+                        <img src="https://catloga.com/tiles-calculator/assets/grid.svg" alt="Tile Grid"
+                            class="max-w-full w-[300px] sm:w-[415px] h-auto" />
+
+                        <div class="relative w-full max-w-[415px] flex justify-center items-center mt-4">
+                            <!-- Horizontal Line -->
+                            <div class="absolute left-0 top-1/2 w-full h-[1px] bg-black"></div>
+
+                            <!-- Label -->
+                            <div id="lengthValue" class="bg-white px-2 text-black z-10">
+                                Length
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side Inputs -->
+            <div class="flex flex-col w-full gap-[15px] mt-2">
+
+                <!-- Tile Type -->
+                <div class="flex flex-col gap-[10px]">
+                    <p class="font-medium">What is the type of tile?</p>
+
+                    <div class="flex flex-row gap-4">
+                        <label class="flex items-center gap-2">
+                            <input type="radio" name="tileType" value="Floor Tile Size" checked
+                                onchange="updateTileLabel()" checked />
+                            Floor Tiles
+                        </label>
+                        <label class="flex items-center gap-2">
+                            <input type="radio" name="tileType" value="Wall Tile Size" onchange="updateTileLabel()" />
+                            Wall Tiles
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Tile Size -->
+                <div class="flex flex-col gap-2">
+                    <p class="font-medium">What is the size of tile?</p>
+                    <div class="relative w-full">
+                        <select id="tileSizeSelect"
+                            class="appearance-none border border-gray-200 px-4 h-[45px] w-full bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="300 x 600" data-picperbox="5">300 x 600 MM</option>
+                            <option value="400 x 800" data-picperbox="3">400 x 800 MM</option>
+                            <option value="600 x 600" data-picperbox="4">600 x 600 MM</option>
+                            <option value="800 x 800" data-picperbox="3">800 x 800 MM</option>
+                            <option value="600 x 1200" data-picperbox="2">600 x 1200 MM</option>
+                            <option value="200 x 1200" data-picperbox="4">200 x 1200 MM</option>
+                        </select>
+                        <div class="pointer-events-none absolute inset-y-0 right-3 flex items-center text-black">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Area Inputs -->
+                <div class="flex flex-col gap-[10px]">
+                    <p class="font-medium">What's the total area you're planning to tile?</p>
+
+                    <!-- Wrapper: column on mobile, row on desktop -->
+                    <div class="flex flex-col items-end md:flex-row md:items-end gap-4 w-full">
+
+                        <!-- Length + Width wrapper -->
+                        <div class="flex flex-col w-full md:flex-row md:items-end md:gap-2 md:w-2/3">
+
+                            <!-- Row for Length + Width -->
+                            <div class="flex flex-row items-end gap-2 w-full">
+                                <!-- Length Input -->
+                                <div class="flex flex-col w-1/2">
+                                    <label for="lengthInput" class="text-[14px] text-[#909090] mb-1">Length</label>
+                                    <input id="lengthInput" type="text" placeholder="Length"
+                                        class="border h-[45px] w-full px-[13px]" oninput="updateValues()" />
+                                </div>
+                                <!-- Desktop-only "x" symbol aligned to dropdown -->
+                                <div
+                                    class="flex items-center justify-center h-[45px] px-2 text-gray-500 text-lg font-medium">
+                                    x
+                                </div>
+                                <!-- Width Input -->
+                                <div class="flex flex-col w-1/2">
+                                    <label for="widthInput" class="text-[14px] text-[#909090] mb-1">Width</label>
+                                    <input id="widthInput" type="text" placeholder="Width"
+                                        class="border h-[45px] w-full px-[13px]" oninput="updateValues()" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Unit Select with trailing "x" on desktop -->
+                        <div class="flex w-full md:w-1/3 md:flex-row md:items-end md:gap-2">
+                            <div class="flex flex-col w-full">
+                                <label for="unit" class="text-[14px] text-[#909090] mb-1">Unit</label>
+                                <div class="relative">
+                                    <select id="unit"
+                                        class="appearance-none border border-gray-200 px-4 h-[45px] w-full max-w-full bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500">
+
+                                        <option value="Inches">Inches</option>
+                                        <option value="Feet" selected>Feet</option>
+                                        <option value="Meter">Meter</option>
+                                        <option value="Centimeter">Centimeter</option>
+                                    </select>
+                                    <div
+                                        class="pointer-events-none absolute inset-y-0 right-3 flex items-center text-black">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+
+
+                </div>
+                <!-- Buttons -->
+                <div class="flex gap-4 mt-[15px]">
+                    <button id="calculate" class="btn-calculate">Calculate</button>
+                    <button class="btn-reset" onclick="resetValues()">Reset</button>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div class="flex flex-col lg:flex-row gap-4 mt-[60px] bg-white w-full max-w-[1403px] p-[30px] md:p-[50px]">
+
+            <!-- Left Summary -->
+            <div class="flex flex-col justify-center gap-5 w-full">
+                <img src="https://catloga.com/tiles-calculator/assets/Calculator.svg" alt="" class="w-[63px] h-auto" />
+                <div>
+                    <h2 class="text-xl md:text-2xl font-semibold text-[#3E3E3E]">Calculated Tile Requirements</h2>
+                    <p class="text-[#5A5A5A] text-sm">Here's the detailed estimation based on your provided dimensions
+                        and tile size.</p>
+                </div>
+                <button class="btn-print-estimate" onclick="downloadPDF()">
+                    <img src="https://catloga.com/tiles-calculator/assets/printer.svg" alt="Print" class="btn-icon" />
+                    Print Final Estimate
+                </button>
+
+            </div>
+            <!-- Right Summary -->
+            <!-- Right Summary -->
+            <div
+                class="flex flex-col lg:flex-row justify-between bg-[#F8F8F8] border-t border-black w-full max-w-[655px] p-[30px] gap-[20px] lg:gap-[30px]">
+
+                <!-- Summary Info -->
+                <div class="grid grid-cols-1 gap-x-[30px] gap-y-[25px] w-full lg:w-auto">
+                    <div class="min-w-[120px]">
+                        <p id="tileSizeLabel" class="text-sm text-[#5A5A5A]">Tiles Size</p>
+                        <p id="tileSizeValue" class="text-lg font-semibold text-[#3E3E3E] mt-1">N/A</p>
+
+                    </div>
+                    <div class="min-w-[120px]">
+                        <p class="text-sm text-[#5A5A5A]">Total Area Covered</p>
+                        <p id="totalAreaValue" class="text-lg font-semibold text-[#3E3E3E] mt-1">0.00 Sq Ft</p>
+
+                    </div>
+                    <div class="min-w-[120px]">
+                        <p class="text-sm text-[#5A5A5A]">Total Tiles Needed</p>
+                        <p id="totalTilesValue" class="text-lg font-semibold text-[#3E3E3E] mt-1">0 Tiles</p>
+
+                    </div>
+                    <div class="min-w-[120px]">
+                        <p class="text-sm text-[#5A5A5A]">Boxes Needed</p>
+                        <p id="totalBoxesValue" class="text-lg font-semibold text-[#3E3E3E] mt-1">0 Box</p>
+
+                    </div>
+                </div>
+
+                <!-- Additional Info -->
+                <div
+                    class="w-full flex flex-col justify-end lg:w-[45%] text-[#5A5A5A] text-sm leading-[22px] text-left">
+                    <p>
+                        An additional 10% has been included in your estimate to cover any tile cuts, edge trimming, or
+                        unexpected
+                        breakage during installation. This buffer ensures your project stays on track without
+                        last-minute material
+                        shortages.
+                    </p>
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+
+    <!-- Visible only in PDF -->
+
+
+    <iframe id="pdfFrame"
+        style="position: absolute; top: -10000px; left: -10000px; width: 794px; height: 1122px; border: none;"></iframe>
+
+    <script>
+        function updateValues() {
+            const length = parseFloat(document.getElementById('lengthInput').value);
+            const width = parseFloat(document.getElementById('widthInput').value);
+            const unit = document.getElementById("unit").value;
+            document.getElementById('lengthValue').textContent = length ? `${length} ${unit}` : 'Length';
+            document.getElementById('widthValue').textContent = width ? `${width} ${unit}` : 'Width';
+        }
+
+        function resetValues() {
+            document.getElementById('lengthInput').value = '';
+            document.getElementById('widthInput').value = '';
+            document.getElementById('lengthValue').textContent = 'Length';
+            document.getElementById('widthValue').textContent = 'Width';
+            updateSummary('N/A', '0.00 Sq Ft', '0 Tiles', '0 Box');
+        }
+
+        function updateSummary(tileSize, totalArea, totalTiles, totalBoxes) {
+            document.getElementById('tileSizeValue').textContent = tileSize;
+            document.getElementById('totalAreaValue').textContent = totalArea;
+            document.getElementById('totalTilesValue').textContent = totalTiles;
+            document.getElementById('totalBoxesValue').textContent = totalBoxes;
+        }
+
+        function convertToFeet(value, unit) {
+            switch (unit) {
+                case "Inches": return value / 12;
+                case "Meter": return value * 3.28084;
+                case "Centimeter": return value * 0.0328084;
+                case "Feet":
+                default: return value;
+            }
+        }
+
+        document.getElementById('calculate').addEventListener('click', () => {
+            const lengthRaw = parseFloat(document.getElementById('lengthInput').value);
+            const widthRaw = parseFloat(document.getElementById('widthInput').value);
+            const unit = document.getElementById('unit').value;
+            const tileSelect = document.getElementById('tileSizeSelect');
+            const tileSizeText = tileSelect.value;
+            const tilesPerBox = parseInt(tileSelect.options[tileSelect.selectedIndex].dataset.picperbox);
+
+            if (!lengthRaw || !widthRaw || !tileSizeText) {
+                alert("Please enter both length and width, and select a tile size.");
+                return;
+            }
+
+            const length = convertToFeet(lengthRaw, unit);
+            const width = convertToFeet(widthRaw, unit);
+            const areaInSqFt = parseFloat((length * width).toFixed(2));
+
+            // Get tile size in mm from value like "600 x 600"
+            const [tileWmm, tileHmm] = tileSizeText
+                .split('x')
+                .map(s => parseFloat(s.trim()));
+
+            // Convert tile size to feet
+            const tileWft = tileWmm / 304.8;
+            const tileHft = tileHmm / 304.8;
+            const tileArea = tileWft * tileHft;
+
+            // Calculate total tiles with 10% extra
+            const totalTiles = Math.ceil((areaInSqFt * 1.1) / tileArea);
+            const totalBoxes = Math.ceil(totalTiles / tilesPerBox);
+
+            updateSummary(
+                `${tileSizeText} MM`,
+                `${areaInSqFt} Sq Ft`,
+                `${totalTiles} Tiles`,
+                `${totalBoxes} Boxes`
+            );
+
+        });
+
+        function updateTileLabel() {
+            const selectedType = document.querySelector('input[name="tileType"]:checked').value;
+            const label = document.getElementById('tileSizeLabel');
+
+            // Change label text based on selected tile type
+            if (selectedType === 'Floor Tile Size') {
+                label.textContent = 'Floor Tile Size';
+            } else if (selectedType === 'Wall Tile Size') {
+                label.textContent = 'Wall Tile Size';
+            }
+        }
+        window.onload = updateTileLabel;
+
+        async function downloadPDF() {
+            const tileSize = document.getElementById('tileSizeValue').textContent;
+            const totalArea = document.getElementById('totalAreaValue').textContent;
+            const totalTiles = document.getElementById('totalTilesValue').textContent;
+            const totalBoxes = document.getElementById('totalBoxesValue').textContent;
+
+            // Create HTML with dynamic values
+            const dynamicHTML = `
+        <div id="resultSection" style="
+            width: 794px;
+            height: 1122px;
+            padding: 45px;
+            margin: auto;
+            box-sizing: border-box;
+            display: flex;
+            font-family: 'Jost', sans-serif;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            background-color: white;
+        ">
+            <div style="text-align: center; width: 100%; max-width: 700px; margin: 0 auto;">
+                <img src="https://lorencesurfaces.com/wp-content/uploads/2025/02/2.png"
+                    alt="Lorence Logo"
+                    style="height: 44px; width: 186px; margin-top: 40px; display: block; margin-left: auto; margin-right: auto;">
+                <h2 style="font-size: 25px; margin-top: 56px; font-weight: 600;">Your Tiling Project Estimation</h2>
+                <p style="color: #6C6A6A; margin-top: 10px; font-size: 16px;">
+                    We have calculated your tiling requirements based on your inputs
+                </p>
+                <div style="
+                    display: grid;
+                    grid-template-columns: repeat(2, 1fr);
+                    gap: 20px;
+                    font-size: 16px;
+                    background: #F9F9F9;
+                    padding: 30px;
+                    margin-top: 35px;
+                    border-top: 2px solid #333;
+                    max-width: 705px;
+                    margin-left: auto;
+                    margin-right: auto;
+                ">
+                    <div style="border: 1px solid #E2E2E2; padding: 20px; text-align: center;">
+                        <p style="font-size: 14px; color: #666; margin: 0;">Tiles Size</p>
+                        <p id="tileSizeValue" style="font-size: 18px; font-weight: bold; margin: 5px 0 0;">${tileSize}</p>
+                    </div>
+                    <div style="border: 1px solid #E2E2E2; padding: 20px; text-align: center;">
+                        <p style="font-size: 14px; color: #666; margin: 0;">Total Area Covered</p>
+                        <p id="totalAreaValue" style="font-size: 18px; font-weight: bold; margin: 5px 0 0;">${totalArea}</p>
+                    </div>
+                    <div style="border: 1px solid #E2E2E2; padding: 20px; text-align: center;">
+                        <p style="font-size: 14px; color: #666; margin: 0;">Total Tiles Needed</p>
+                        <p id="totalTilesValue" style="font-size: 18px; font-weight: bold; margin: 5px 0 0;">${totalTiles}</p>
+                    </div>
+                    <div style="border: 1px solid #E2E2E2; padding: 20px; text-align: center;">
+                        <p style="font-size: 14px; color: #666; margin: 0;">Boxes Needed</p>
+                        <p id="totalBoxesValue" style="font-size: 18px; font-weight: bold; margin: 5px 0 0;">${totalBoxes}</p>
+                    </div>
+                    <p style="grid-column: span 2; font-size: 13px; color: #555; margin-top: 20px; text-align: center; line-height: 1.6;">
+                        An additional 10% has been included in your estimate to cover any tile cuts, edge trimming, or unexpected breakage during installation. This buffer ensures your project stays on track without last-minute material shortages.
+                    </p>
+                </div>
+            </div>
+            <p style="font-size: 14px; color: #555; text-align: center; margin-top: 30px;">
+                www.lorencesurfaces.com
+            </p>
+        </div>
+        `;
+
+
+            const container = document.createElement('div');
+            container.innerHTML = dynamicHTML;
+            container.style.display = 'flex';
+            container.style.justifyContent = 'center';
+            container.style.alignItems = 'center';
+            container.style.height = '100vh';
+            container.style.background = 'white';
+            container.id = "pdf-wrapper";
+
+            document.body.appendChild(container);
+
+            const content = document.getElementById("resultSection");
+
+            const contentWidth = content.scrollWidth;
+            const contentHeight = content.scrollHeight;
+
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF({
+                orientation: "portrait",
+                unit: "px",
+                format: [contentWidth, contentHeight]
+            });
+
+            try {
+                const canvas = await html2canvas(content, {
+                    scale: 2,
+                    useCORS: true,
+                    backgroundColor: "#ffffff"
+                });
+
+                const imgData = canvas.toDataURL("image/png", 1.0);
+                pdf.addImage(imgData, 'PNG', 0, 0, contentWidth, contentHeight);
+                pdf.save("Lorence_Tiling_Estimation.pdf");
+            } catch (error) {
+                console.error("PDF generation failed:", error);
+            } finally {
+                document.body.removeChild(container);
+            }
+        }
+    </script>
+
+
+</body>
+
+</html>
